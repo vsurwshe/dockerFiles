@@ -1,0 +1,34 @@
+# Use root/example as user/password credentials
+version: '3'
+services:
+  vishva:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: vany
+      MYSQL_USER: vishva
+      MYSQL_PASSWORD: admin@123
+      MYSQL_ROOT_HOST: '%'
+    networks:
+      - net
+  # phpmyadmin
+  phpmyadmin:
+    depends_on:
+      - vishva
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8080:80'
+    links: 
+      - vishva:vishva
+    environment:
+      PMA_HOST: vishva
+      PMA_PORT: 3306
+    networks:
+      - net
+networks:
+  net:

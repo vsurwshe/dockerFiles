@@ -1,8 +1,9 @@
 # Use root/example as user/password credentials
 version: '3'
 services:
-  vishva:
+  vishva_database:
     image: mysql
+    container_name: vishva_database
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - ./mysql-data:/var/lib/mysql
@@ -10,8 +11,8 @@ services:
       - "3306:3306"
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: vany
+      MYSQL_ROOT_PASSWORD: admin@123
+      # MYSQL_DATABASE: vany
       MYSQL_USER: vishva
       MYSQL_PASSWORD: admin@123
       MYSQL_ROOT_HOST: '%'
@@ -20,15 +21,16 @@ services:
   # phpmyadmin
   phpmyadmin:
     depends_on:
-      - vishva
+      - vishva_database
     image: phpmyadmin/phpmyadmin
+    container_name: vishva_database_access
     restart: always
     ports:
       - '8080:80'
     links: 
-      - vishva:vishva
+      - vishva_database:vishva_database
     environment:
-      PMA_HOST: vishva
+      PMA_HOST: vishva_database
       PMA_PORT: 3306
     networks:
       - net

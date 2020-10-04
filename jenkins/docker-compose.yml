@@ -1,0 +1,19 @@
+version: '3'
+services:  
+  jenkins:
+    container_name: jenkins
+    image: bitnami/jenkins
+    environment:
+       JENKINS_USERNAME: vishva
+       JENKINS_PASSWORD: admin@123
+    restart: always
+    ports:
+      - "9000:8080"
+    volumes:
+      - "$PWD/jenkins_home:/bitnami/jenkins"
+    networks:
+      - jenkinsNet
+networks:
+  jenkinsNet:
+
+    # Before the satrt docker compose up please make sure your jenkins floder have 777 chmod
